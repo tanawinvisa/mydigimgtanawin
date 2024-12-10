@@ -508,13 +508,6 @@ def test_predict_board(obtain_piece_probs_for_all_64_squares):
     fens, a1_squares, previous_fens = read_correct_fen(
         os.path.join("data", "predictions", "boards_with_previous.fen")
     )
-
-    # Get a sorted list of all .jpg files in the directory
-    jpg_files = sorted(glob.glob(os.path.join("data", "predictions", "frame", "*.jpg")))
-
-    if not jpg_files:
-        print(f"No .jpg files found in {frame_path}")
-        return
     
     # Define the base filename for output files
     base_filename = "predicted_fens"
@@ -525,6 +518,14 @@ def test_predict_board(obtain_piece_probs_for_all_64_squares):
     while os.path.exists(output_file):
         file_counter += 1
         output_file = f"{base_filename}_{file_counter}.txt"
+
+    frame_path = f"data/predictions/frame{file_counter}"
+    # Get a sorted list of all .jpg files in the directory
+    jpg_files = sorted(glob.glob(os.path.join(frame_path, "*.jpg")))
+
+    if not jpg_files:
+        print(f"No .jpg files found in {frame_path}")
+        return
 
     # Create the new file
     with open(output_file, "w") as file:
