@@ -489,11 +489,12 @@ def continuous_predictions(
     with open(output_file, "w") as file:
         file.write("")  # Create an empty file
 
+    fen = None
     for _, jpg_file in enumerate(jpg_files):
         
 
         # Predict FEN for the current image
-        fen = predict_board(
+        fen, _ = predict_board(
             jpg_file,
             a1_pos,
             obtain_piece_probs_for_all_64_squares,
