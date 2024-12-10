@@ -499,7 +499,7 @@ def continuous_predictions(
             a1_pos,
             obtain_piece_probs_for_all_64_squares,
             board_corners=None,
-            previous_fen=fen
+            previous_fen=None
         )
 
         # Save FEN to the output file
