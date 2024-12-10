@@ -112,7 +112,6 @@ def main():
             PRE_INPUT_ONNX,
             path,
             a1_pos,
-            True,
             previous_fen=previous_fen,
         )
     elif ACTIVATE_TRT:

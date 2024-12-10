@@ -467,32 +467,44 @@ def continuous_predictions(
     def natural_key(text):
         return [int(c) if c.isdigit() else c for c in re.split(r"(\d+)", text)]
     
-    fen_file = "boards.fen"
-    print("here is path:" + path)
-    if not os.path.exists(fen_file):
-        with open(fen_file, "w") as file:
-            file.write("")  # Create an empty file
+    # Define the base filename for output files
+    base_filename = "predicted_fens"
+    output_file = f"{base_filename}_1.txt"
 
-    print("Done loading. Monitoring " + path)
-    board_corners = None
-    fen = None
-    processed_board = False
-    while True:
-        for board_path in sorted(glob.glob(path + "*.jpg"), key=natural_key):
-            print("baord_path: " + board_path)
-            fen, board_corners = predict_board(
-                board_path,
-                a1_pos,
-                obtain_piece_probs_for_all_64_squares,
-                board_corners,
-                fen,
-            )
-            print(fen)
-            processed_board = True
-            os.remove(board_path)
+    # Find the next available file name
+    file_counter = 1
+    while os.path.exists(output_file):
+        file_counter += 1
+        output_file = f"{base_filename}_{file_counter}.txt"
 
-        if not processed_board:
-            time.sleep(0.1)
+    frame_path = f"data/predictions/frame{file_counter}"
+    # Get a sorted list of all .jpg files in the directory
+    jpg_files = sorted(glob.glob(os.path.join(frame_path, "*.jpg")))
+
+    if not jpg_files:
+        print(f"No .jpg files found in {frame_path}")
+        return
+
+    # Create the new file
+    with open(output_file, "w") as file:
+        file.write("")  # Create an empty file
+
+    for _, jpg_file in enumerate(jpg_files):
+        
+
+        # Predict FEN for the current image
+        fen = predict_board(
+            jpg_file,
+            a1_pos,
+            obtain_piece_probs_for_all_64_squares,
+            board_corners=None,
+            previous_fen=fen
+        )
+
+        # Save FEN to the output file
+        with open(output_file, "a") as file:
+          file.write(f"{fen}\n")
+
 
 
 def test_predict_board(obtain_piece_probs_for_all_64_squares):
