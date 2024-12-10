@@ -516,11 +516,19 @@ def test_predict_board(obtain_piece_probs_for_all_64_squares):
         print(f"No .jpg files found in {frame_path}")
         return
     
-    # Define the output file
-    output_file = "predicted_fens.txt"
-    if not os.path.exists(output_file):
-        with open(output_file, "w") as file:
-            file.write("")  # Create an empty file if it doesn't exist
+    # Define the base filename for output files
+    base_filename = "predicted_fens"
+    output_file = f"{base_filename}_1.txt"
+
+    # Find the next available file name
+    file_counter = 1
+    while os.path.exists(output_file):
+        file_counter += 1
+        output_file = f"{base_filename}_{file_counter}.txt"
+
+    # Create the new file
+    with open(output_file, "w") as file:
+        file.write("")  # Create an empty file
 
     # Process each .jpg file
     for idx, jpg_file in enumerate(jpg_files):
